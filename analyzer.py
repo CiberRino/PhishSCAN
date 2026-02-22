@@ -1,22 +1,26 @@
 import re
-from scoring import scor
+import requests
+from scoring import score
 
-def analyzer(URL):
-    found = []
-    score = 0
+def analyzer(URL,H):
 
-    texto = "http://"
+    founds = []
+    scor = 0
 
     shorteners = r"bit\.ly|tinyurl\.com|goo\.su|t\.co"
     Pattern = f"https?://({shorteners})/[a-zA-Z0-9]+"
-    if re.findall(Pattern, URL):
-        print("[!] shorteners in the url")        
-        score += 10
-        found.append("shorteners")
 
-    if texto in URL:
-        print("[!] http in the url")
-        score += 5
-        found.append("http")
+    if re.findall(Pattern, URL):        
+        scor += 10
+        founds.append("shorteners")
 
-    scor(found,score)
+    if "http://" in URL:
+        scor += 5
+        founds.append("http")
+    
+    if H == True:
+        response = requests.get(URL)
+        print(response.status_code)
+    
+
+    score(founds,scor)

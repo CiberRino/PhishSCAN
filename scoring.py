@@ -1,16 +1,17 @@
-def scor(found,score):
-    for sear in found:
-        if "shorteners" in found:
-            pass
-        if "http" in found:
-            pass
-        
+def score(found,score):
+    signs = 0
+    for search in found:
+        if "shorteners" in search:
+            print("[*] Un enlace acortado no siempre es phishing; depende del contexto y la situación. Ante la duda, no lo abras y consulta con tu equipo.")
+            signs += 1        
+        if "http" in search:
+            print("[!] Si un enlace usa HTTP, no compartas datos sensibles; depende del contexto y la situación. Ante la duda, no lo abras y consulta con tu equipo.")
+            signs += 1
+
     if score <= 30:
-        pass
-    elif score >= 30:
-        pass
-    elif score >= 60:
-        pass
+        print(f"[*] possible low risk {signs} possible signs of phising")
+    elif score >= 80:
+        print(f"[!] possible hight risk {signs} possible signs of phising")
     else:
-        pass
+        print(f"[:] possible mid risk {signs} possible signs of phising")
      
