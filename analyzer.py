@@ -3,64 +3,74 @@ import requests
 import tldextract
 from scoring import score
 
+
 def analyzer(URL,H):
 
     sign = 0
     total_score = 0
 
-    count_guion = URL.count("-")
-    count_characters = len(tldextract.extract(URL).domain)
-    ext = tldextract.extract(URL).subdomain
+    try:
 
-    shorteners = r"bit\.ly|tinyurl\.com|goo\.su|t\.co"
-    pattern = f"https?://({shorteners})/[a-zA-Z0-9]+"
-    patternIp4 = r'\b(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\b'
+        count_guion = URL.count("-")
+        count_characters = len(tldextract.extract(URL).domain)
+        ext = tldextract.extract(URL).subdomain
+        domain = tldextract.extract(URL).registered_domain
 
-    if ext:
-        listsub = lista_subdominios = ext.split('.')
-        count_subdomain = len(lista_subdominios)
-        if count_subdomain >= 4:
-            total_score += 5
-            sign += 1 
-            print(f"[!] too much subdomains: {count_subdomain}")
+        pattern = f"https?://({domain})/[a-zA-Z0-9]+"
+        patternIp4 = r'\b(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\b'
 
-    if count_characters >= 25:
-        total_score += 5
-        sign += 1
-        print(f"[!] too much characters: {count_characters}") 
+        if ext:
+            lista_subdominios = ext.split('.')
+            count_subdomain = len(lista_subdominios)
 
-    if count_guion >= 4:
+            if count_subdomain >= 4:
+                total_score += 5
+                sign += 1 
+                print(f"[!] too much subdomains: {count_subdomain}")
+
+        if count_characters >= 25:
             total_score += 5
             sign += 1
-            print(f"[!] too much - : {count_guion}")  
+            print(f"[!] too much characters: {count_characters}") 
 
-    if re.search(patternIp4, URL):
-        total_score += 10
-        sign += 1
-        print("[!] detected ip4")
+        if count_guion >= 4:
+                total_score += 5
+                sign += 1
+                print(f"[!] too much - : {count_guion}")  
 
-    if re.findall(pattern, URL):        
-        total_score += 15
-        sign += 1
-        print("[!] shortener in the url")
+        if re.search(patternIp4, URL):
+            total_score += 15
+            sign += 1
+            print("[!] detected ip4")
 
-    if "http://" in URL:
-        total_score += 10
-        sign += 1
-        print("[!] http in the url")
-    
-    if H:
-        response = requests.get(URL)
+        if re.findall(pattern, URL):        
+            total_score += 15
+            sign += 1
+            print("[!] shortener in the url")
 
-        if response.history:
-            total_score += 5
-            print("[!] there was a redirection")
-            for redirect in response.history:
-                print(redirect.status_code, redirect.url)
+        if "http://" in URL:
+            total_score += 10
+            sign += 1
+            print("[!] http in the url")
 
-            print("End:", response.status_code, response.url)
-        else:
-            print(response.status_code)
-            print(response.text)
+        if H:
+            try:
+                response = requests.get(URL)
 
-    score(sign,total_score)
+                if response.history:
+                    total_score += 5
+                    print("[!] there was a redirection")
+                    for redirect in response.history:
+                        print(redirect.status_code, redirect.url)
+
+                    print("End:", response.status_code, response.url)
+                else:
+                    print(response.status_code)
+                    print(response.text)
+            except requests.exceptions.RequestException as s:
+                print(f"error: {s}")
+
+        score(sign,total_score)
+
+    except requests.exceptions.RequestException as r:
+        print(r)
