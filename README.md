@@ -1,11 +1,11 @@
 # URLscan 
-URLscan is an educational project about basic phishing detection techniques.
+URLscan is an educational project rule based about basic phishing detection techniques.
 This software is not intended for use in real-world environments.
 It was created for learning and experimentation purposes only.
 
 # How to use
 
-# that can detect:
+# Can detect:
 - too much - or subdomains
 - IPv4 in the domain
 - very long domain
