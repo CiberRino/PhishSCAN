@@ -46,7 +46,7 @@ example:
 Make sure you have Python 3 installed. Then install dependencies:
 
 ```bash
-pip install requests tldextract
+pip install -r requirements.txt
 ```
 
 # License
