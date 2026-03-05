@@ -1,4 +1,4 @@
-# URLscan 
+# PhishSCAN 
 PhishSCAN is an educational project rule based about basic phishing detection techniques in a url. This software is not intended for use in real-world environments.
 It was created for learning and experimentation purposes only.
 
