@@ -19,7 +19,7 @@ python3 urlscan.py https://your-url-suspicious.com [optional flags]
 ```
 
 # Flags and system score
-For now, this project includes two optional flags:
+this project includes two optional flags:
 
 -H → Retrieves and analyzes the HTML content of the page.
 
